@@ -15,14 +15,15 @@
     </entity>
     <entity name="Meal" representedClassName="Meal" syncable="YES" codeGenerationType="class">
         <attribute name="beginTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="snack" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Entry" inverseName="meal" inverseEntity="Entry"/>
         <relationship name="foods" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Food" inverseName="meals" inverseEntity="Food"/>
     </entity>
     <elements>
-        <element name="Food" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="Entry" positionX="-54" positionY="18" width="128" height="103"/>
-        <element name="Meal" positionX="-45" positionY="45" width="128" height="118"/>
+        <element name="Food" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Meal" positionX="-45" positionY="45" width="128" height="133"/>
     </elements>
 </model>
