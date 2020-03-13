@@ -44,6 +44,7 @@ struct EntryView: View {
                         newEntry.food = self.foods[self.foodIndex]
                         newEntry.amount = Int16(self.amount + 1)
                         newEntry.timestamp = self.date
+                        try? self.moc.save()
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }

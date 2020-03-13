@@ -31,11 +31,16 @@ struct EntriesView: View {
     
     var body: some View {
         NavigationView {
-            List(entries, id: \.self) { entry in
-                HStack {
-                    Text(entry.food?.name ?? "Entry")
-                    Spacer()
-                    Text("\(entry.amount) fists")
+            List {
+                ForEach(entries, id: \.self) { entry in
+                    HStack {
+                        Text(entry.food?.name ?? "Entry")
+                        Spacer()
+                        Text("\(entry.amount) fists")
+                    }
+                }
+                .onDelete { indexSet in
+                    self.moc.delete(self.entries[indexSet.first!])
                 }
             }
             .navigationBarTitle("Food Tracker")

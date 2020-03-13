@@ -24,6 +24,7 @@ struct FoodView: View {
                 Button("Save") {
                     let newFood = Food(context: self.moc)
                     newFood.name = self.name
+                    try? self.moc.save()
                     self.presentationMode.wrappedValue.dismiss()
                 }
             }
