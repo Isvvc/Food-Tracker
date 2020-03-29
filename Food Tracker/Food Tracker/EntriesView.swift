@@ -24,12 +24,6 @@ struct EntriesView: View {
         return value
     }()
     
-    let timeFormatter: DateFormatter = {
-        let value = DateFormatter()
-        value.dateFormat = "h:mm a"
-        return value
-    }()
-    
     var addEntryButton: some View {
         Button(action: { self.showingEntry.toggle() }) {
                         Image(systemName: "plus")
@@ -86,15 +80,7 @@ struct EntriesView: View {
                 ForEach(filteredEntries, id: \.self) { day in
                     Section(header: Text(self.dateFormatter.string(from: day.first?.timestamp ?? Date()))) {
                         ForEach(day, id: \.self) { entry in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(entry.food?.name ?? "Entry")
-                                    Text(self.timeFormatter.string(from: entry.timestamp ?? Date()))
-                                        .font(.caption)
-                                }
-                                Spacer()
-                                Text("\(entry.amount) fists")
-                            }
+                            EntryCell(entry: entry)
                         }
                     }
                 }
