@@ -70,11 +70,51 @@ struct EntriesView: View {
         return results
     }
     
+    var planned: Int16 {
+        filteredEntries[0].map({ $0.amount }).reduce(0, +)
+    }
+    
+    var eaten: Int16 {
+        filteredEntries[0].filter({ $0.complete }).map({ $0.amount }).reduce(0, +)
+    }
+    
+    var progress: CGFloat {
+        CGFloat(eaten) / CGFloat(planned)
+    }
+    
     var body: some View {
         NavigationView {
             List {
                 Toggle(isOn: $showHistory) {
-                    Text("Show history")
+                    Text("Show past week")
+                }
+                
+                if filteredEntries.count > 0 {
+                    HStack {
+                        Text("Fists planned:")
+                        Spacer()
+                        Text("\(planned)")
+                    }
+                    VStack {
+                        HStack {
+                            Text("Eaten so far:")
+                            Spacer()
+                            Text("\(eaten)")
+                        }
+                        ZStack(alignment: .leading) {
+                            GeometryReader { geometryReader in
+                                Capsule()
+                                    .foregroundColor(Color(UIColor(red: 245/255,
+                                                                   green: 245/255,
+                                                                   blue: 245/255,
+                                                                   alpha: 1.0)))
+                                Capsule()
+                                    .frame(width: geometryReader.size.width * self.progress)
+                                    .foregroundColor(.green)
+                                    .animation(.easeInOut)
+                            }
+                        }
+                    }
                 }
                 
                 ForEach(filteredEntries, id: \.self) { day in
