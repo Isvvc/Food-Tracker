@@ -10,16 +10,19 @@ import SwiftUI
 
 struct EntriesView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(entity: Entry.entity(), sortDescriptors: [NSSortDescriptor(key: "timestamp", ascending: false)]) var entries: FetchedResults<Entry>
+    @FetchRequest(
+        entity: Entry.entity(),
+        sortDescriptors: [NSSortDescriptor(key: "timestamp", ascending: false)]
+    ) var entries: FetchedResults<Entry>
     
     @State private var showingEntry = false
+    @State private var showHistory = false
     
-//    let dateFormatter: DateFormatter = {
-//        let value = DateFormatter()
-//        value.dateStyle = .short
-//        value.timeStyle = .short
-//        return value
-//    }()
+    let dateFormatter: DateFormatter = {
+        let value = DateFormatter()
+        value.dateFormat = "EEEE, MMM d, h:mm a"
+        return value
+    }()
     
     var addEntryButton: some View {
         Button(action: { self.showingEntry.toggle() }) {
@@ -32,11 +35,24 @@ struct EntriesView: View {
     var body: some View {
         NavigationView {
             List {
+                Toggle(isOn: $showHistory) {
+                    Text("Show history")
+                }
+                
                 ForEach(entries, id: \.self) { entry in
-                    HStack {
-                        Text(entry.food?.name ?? "Entry")
-                        Spacer()
-                        Text("\(entry.amount) fists")
+                    Group {
+                        if self.showHistory ||
+                            entry.timestamp ?? Date() > Calendar.current.startOfDay(for: Date()) {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(entry.food?.name ?? "Entry")
+                                    Text(self.dateFormatter.string(from: entry.timestamp ?? Date()))
+                                        .font(.caption)
+                                }
+                                Spacer()
+                                Text("\(entry.amount) fists")
+                            }
+                        }
                     }
                 }
                 .onDelete { indexSet in
