@@ -20,7 +20,13 @@ struct EntriesView: View {
     
     let dateFormatter: DateFormatter = {
         let value = DateFormatter()
-        value.dateFormat = "EEEE, MMM d, h:mm a"
+        value.dateFormat = "EEEE, MMM d"
+        return value
+    }()
+    
+    let timeFormatter: DateFormatter = {
+        let value = DateFormatter()
+        value.dateFormat = "h:mm a"
         return value
     }()
     
@@ -28,8 +34,46 @@ struct EntriesView: View {
         Button(action: { self.showingEntry.toggle() }) {
                         Image(systemName: "plus")
                             .imageScale(.large)
-//                            .padding()
+//                            .padding(2)
                     }
+    }
+    
+    var datesToShow: [Date] {
+        if showHistory {
+            var dates = [Date()]
+            for i in 1..<7 {
+                guard let date = Calendar.current.date(byAdding: .day, value: i * -1, to: Date()) else { continue }
+                dates.append(date)
+            }
+            
+            return dates
+        }
+        
+        return [Date()]
+    }
+    
+    var filteredEntries: [[Entry]] {
+        var results: [[Entry]] = []
+        var remainingEntries = entries.compactMap { $0 }
+        
+        for i in 0..<(showHistory ? 7 : 1) {
+            guard let date = Calendar.current.date(byAdding: .day, value: i * -1, to: Date()) else { continue }
+            
+            let filteredEntries = remainingEntries.filter { entry -> Bool in
+                if let timestamp = entry.timestamp {
+                    return timestamp > Calendar.current.startOfDay(for: date)
+                }
+                
+                return false
+            }
+            
+            if filteredEntries.count > 0 {
+                results.append(filteredEntries)
+                remainingEntries.removeAll(where: { filteredEntries.contains($0) })
+            }
+        }
+        
+        return results
     }
     
     var body: some View {
@@ -39,14 +83,13 @@ struct EntriesView: View {
                     Text("Show history")
                 }
                 
-                ForEach(entries, id: \.self) { entry in
-                    Group {
-                        if self.showHistory ||
-                            entry.timestamp ?? Date() > Calendar.current.startOfDay(for: Date()) {
+                ForEach(filteredEntries, id: \.self) { day in
+                    Section(header: Text(self.dateFormatter.string(from: day.first?.timestamp ?? Date()))) {
+                        ForEach(day, id: \.self) { entry in
                             HStack {
                                 VStack(alignment: .leading) {
                                     Text(entry.food?.name ?? "Entry")
-                                    Text(self.dateFormatter.string(from: entry.timestamp ?? Date()))
+                                    Text(self.timeFormatter.string(from: entry.timestamp ?? Date()))
                                         .font(.caption)
                                 }
                                 Spacer()
@@ -59,6 +102,7 @@ struct EntriesView: View {
                     self.moc.delete(self.entries[indexSet.first!])
                 }
             }
+            .listStyle(GroupedListStyle())
             .navigationBarTitle("Food Tracker")
             .navigationBarItems(trailing: addEntryButton)
             .sheet(isPresented: $showingEntry) {
