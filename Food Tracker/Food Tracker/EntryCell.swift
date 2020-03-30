@@ -28,7 +28,7 @@ struct EntryCell: View {
                         .font(.caption)
                 }
                 Spacer()
-                Text("\(entry.amount) fists")
+                Text("\(entry.amount) fist\(entry.amount == 1 ? "" : "s")")
                 if self.entry.complete {
                     Image(systemName: "checkmark")
                         .foregroundColor(Color(.systemBlue))
