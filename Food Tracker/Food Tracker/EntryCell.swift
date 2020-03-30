@@ -12,6 +12,7 @@ struct EntryCell: View {
     @Environment(\.managedObjectContext) var moc
     
     let entry: Entry
+    let entryController: EntryController
     
     let timeFormatter: DateFormatter = {
         let value = DateFormatter()
@@ -21,8 +22,7 @@ struct EntryCell: View {
     
     var body: some View {
         Button(action: {
-            self.entry.complete.toggle()
-            try? self.moc.save()
+            self.entryController.toggleComplete(entry: self.entry, context: self.moc)
         }) {
             HStack {
                 VStack(alignment: .leading) {

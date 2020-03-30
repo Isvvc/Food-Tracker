@@ -21,6 +21,8 @@ struct EntriesView: View {
     @State private var showWeekOnly = true
     @State private var showNoFoodAlert = false
     
+    let entryController = EntryController()
+    
     let dateFormatter: DateFormatter = {
         let value = DateFormatter()
         value.dateFormat = "EEEE, MMM d"
@@ -139,21 +141,22 @@ struct EntriesView: View {
                         
                         Section {
                             ForEach(day, id: \.self) { entry in
-                                EntryCell(entry: entry)
+                                EntryCell(entry: entry, entryController: self.entryController)
                             }
                         }
                     }
                 }
                 .onDelete { indexSet in
-                    self.moc.delete(self.entries[indexSet.first!])
-                    try? self.moc.save()
+                    let entry = self.entries[indexSet.first!]
+                    
+                    self.entryController.deleteEntry(entry: entry, context: self.moc)
                 }
             }
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Food Tracker")
             .navigationBarItems(trailing: addEntryButton)
             .sheet(isPresented: $showingEntry) {
-                EntryView()
+                EntryView(entryController: self.entryController)
                     .environment(\.managedObjectContext, self.moc)
             }
         }

@@ -19,44 +19,7 @@ struct EntryView: View {
     @State private var notification: Bool = false
     @State private var alertContents: AlertContents? = nil
     
-    private func setNotification(completion: @escaping (UUID?, String?) -> Void) {
-        if self.notification {
-            if self.date > Date() {
-                // Request permission for notifications
-                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { granted, error in
-                    
-                    if granted == true && error == nil {
-                        // If we have permission
-                        let content = UNMutableNotificationContent()
-                        content.title = "Time to eat!"
-                        content.body = self.foods[self.foodIndex].name ?? ""
-                        content.sound = .default
-                        
-                        let components = Calendar.current.dateComponents([.day, .hour, .minute], from: self.date)
-                        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                        
-                        let uuid = UUID()
-                        let request = UNNotificationRequest(identifier: uuid.uuidString, content: content, trigger: trigger)
-                        
-                        let notificationCenter = UNUserNotificationCenter.current()
-                        notificationCenter.add(request) { error in
-                            if let error = error {
-                                NSLog("\(error)")
-                            }
-                        }
-                        
-                        completion(uuid, nil)
-                    } else {
-                        completion(nil, "Please enable notifications in the settings app.")
-                    }
-                }
-            } else {
-                completion(nil, "Can't set a notification in the past.")
-            }
-        } else {
-            completion(nil, nil)
-        }
-    }
+    let entryController: EntryController
     
     var body: some View {
         NavigationView {
@@ -84,20 +47,18 @@ struct EntryView: View {
                 
                 Section {
                     Button("Save") {
-                        self.setNotification { uuid, alertBody in
-                            if let alertBody = alertBody {
-                                self.alertContents = AlertContents(title: "Could not set notification", body: alertBody)
-                                self.notification = false
-                            } else {
-                                let newEntry = Entry(context: self.moc)
-                                newEntry.food = self.foods[self.foodIndex]
-                                newEntry.amount = Int16(self.amount + 1)
-                                newEntry.timestamp = self.date
-                                newEntry.notification = uuid
-                                
-                                try? self.moc.save()
-                                self.presentationMode.wrappedValue.dismiss()
-                            }
+                        self.entryController.createEntry(
+                            food: self.foods[self.foodIndex],
+                            amount: Int16(self.amount + 1),
+                            timestamp: self.date,
+                            notification: self.notification,
+                            context: self.moc) { alertContents in
+                                if let alertContents = alertContents {
+                                    self.alertContents = alertContents
+                                    self.notification = false
+                                } else {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
                         }
                     }
                 }
@@ -113,7 +74,7 @@ struct EntryView: View {
 struct EntryView_Previews: PreviewProvider {
     static var previews: some View {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        return EntryView()
+        return EntryView(entryController: EntryController())
             .environment(\.managedObjectContext, context)
     }
 }
