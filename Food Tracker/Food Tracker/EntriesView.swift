@@ -17,6 +17,7 @@ struct EntriesView: View {
     
     @State private var showingEntry = false
     @State private var showHistory = false
+    @State private var showWeekOnly = true
     
     let dateFormatter: DateFormatter = {
         let value = DateFormatter()
@@ -32,38 +33,41 @@ struct EntriesView: View {
         }
     }
     
-    var datesToShow: [Date] {
-        if showHistory {
-            var dates = [Date()]
-            for i in 1..<7 {
-                guard let date = Calendar.current.date(byAdding: .day, value: i * -1, to: Date()) else { continue }
-                dates.append(date)
-            }
-            
-            return dates
-        }
-        
-        return [Date()]
-    }
-    
     var filteredEntries: [[Entry]] {
         var results: [[Entry]] = []
-        var remainingEntries = entries.compactMap { $0 }
         
-        for i in 0..<(showHistory ? 7 : 1) {
-            guard let date = Calendar.current.date(byAdding: .day, value: i * -1, to: Date()) else { continue }
-            
-            let filteredEntries = remainingEntries.filter { entry -> Bool in
-                if let timestamp = entry.timestamp {
-                    return timestamp > Calendar.current.startOfDay(for: date)
-                }
+        guard entries.count > 0 else { return results }
+        var index: Int = 0
+        results.append([])
+        
+        for entry in entries {
+            if results[index].count == 0 {
+                results[index].append(entry)
+            } else if let timestamp = entry.timestamp,
+                let firstTimestamp = results[index][0].timestamp {
+                let entryDay = Calendar.current.startOfDay(for: timestamp)
+                let currentDay = Calendar.current.startOfDay(for: firstTimestamp)
                 
-                return false
-            }
-            
-            if filteredEntries.count > 0 {
-                results.append(filteredEntries)
-                remainingEntries.removeAll(where: { filteredEntries.contains($0) })
+                if entryDay == currentDay {
+                    results[index].append(entry)
+                } else {
+                    // Check if the date is out of the filtered range
+                    if showHistory {
+                        if showWeekOnly {
+                            guard let weekAgo = Calendar.current.date(byAdding: .day, value: -6, to: Date()) else { break }
+                            let weekAgoDay = Calendar.current.startOfDay(for: weekAgo)
+                            if entryDay < weekAgoDay {
+                                break
+                            }
+                        }
+                        
+                        // If not, add it to a new day
+                        index += 1
+                        results.append([entry])
+                    } else {
+                        break
+                    }
+                }
             }
         }
         
@@ -86,10 +90,13 @@ struct EntriesView: View {
         NavigationView {
             List {
                 Toggle(isOn: $showHistory) {
-                    Text("Show past week")
+                    Text("Show history")
                 }
                 
-                if filteredEntries.count > 0 {
+                if showHistory {
+                    Toggle(isOn: $showWeekOnly) {
+                        Text("Show past week only")
+                    }
                 }
                 
                 ForEach(filteredEntries, id: \.self) { day in
