@@ -14,10 +14,12 @@ struct EntriesView: View {
         entity: Entry.entity(),
         sortDescriptors: [NSSortDescriptor(key: "timestamp", ascending: false)]
     ) var entries: FetchedResults<Entry>
+    @FetchRequest(entity: Food.entity(), sortDescriptors: []) var foods: FetchedResults<Food>
     
     @State private var showingEntry = false
     @State private var showHistory = false
     @State private var showWeekOnly = true
+    @State private var showNoFoodAlert = false
     
     let dateFormatter: DateFormatter = {
         let value = DateFormatter()
@@ -26,7 +28,13 @@ struct EntriesView: View {
     }()
     
     var addEntryButton: some View {
-        Button(action: { self.showingEntry.toggle() }) {
+        Button(action: {
+            if self.foods.first == nil {
+                self.showNoFoodAlert = true
+            } else {
+                self.showingEntry = true
+            }
+        }) {
             Image(systemName: "plus")
                 .imageScale(.large)
 //                .padding(2)
@@ -148,7 +156,11 @@ struct EntriesView: View {
                 EntryView()
                     .environment(\.managedObjectContext, self.moc)
             }
-        }.tabItem {
+        }
+        .alert(isPresented: $showNoFoodAlert) {
+            Alert(title: Text("No foods to choose from"), message: Text("Try adding some foods in the foods tab"))
+        }
+        .tabItem {
             Image(systemName: "square.and.pencil")
                 .imageScale(.large)
             Text("Entries")
