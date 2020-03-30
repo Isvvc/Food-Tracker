@@ -131,6 +131,7 @@ struct EntriesView: View {
                 }
                 .onDelete { indexSet in
                     self.moc.delete(self.entries[indexSet.first!])
+                    try? self.moc.save()
                 }
             }
             .listStyle(GroupedListStyle())

@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct EntryCell: View {
+    @Environment(\.managedObjectContext) var moc
+    
     let entry: Entry
     
     let timeFormatter: DateFormatter = {
@@ -20,6 +22,7 @@ struct EntryCell: View {
     var body: some View {
         Button(action: {
             self.entry.complete.toggle()
+            try? self.moc.save()
         }) {
             HStack {
                 VStack(alignment: .leading) {
