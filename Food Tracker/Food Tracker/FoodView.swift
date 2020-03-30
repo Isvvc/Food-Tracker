@@ -22,25 +22,31 @@ struct FoodView: View {
     }
     
     var body: some View {
-        Form {
-            Section {
-                TextField("Name", text: $name)
-            }
-            
-            Section {
-                Button("Save") {
-                    guard !self.name.isEmpty else { return }
-                    
-                    if let food = self.food {
-                        food.name = self.name
-                    } else {
-                        let newFood = Food(context: self.moc)
-                        newFood.name = self.name
+        NavigationView {
+            Form {
+                Section {
+                    TextField("Name", text: $name)
+                }
+                
+                Section {
+                    Button("Save") {
+                        guard !self.name.isEmpty else { return }
+                        
+                        if let food = self.food {
+                            food.name = self.name
+                        } else {
+                            let newFood = Food(context: self.moc)
+                            newFood.name = self.name
+                        }
+                        try? self.moc.save()
+                        self.presentationMode.wrappedValue.dismiss()
                     }
-                    try? self.moc.save()
-                    self.presentationMode.wrappedValue.dismiss()
                 }
             }
+            .navigationBarTitle("Food item")
+            .navigationBarItems(trailing: Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+                Text("Cancel")
+            })
         }
     }
 }
