@@ -27,8 +27,14 @@ struct EntryCell: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(entry.food?.name ?? "Entry")
-                    Text(self.timeFormatter.string(from: entry.timestamp ?? Date()))
-                        .font(.caption)
+                    HStack {
+                        Text(self.timeFormatter.string(from: entry.timestamp ?? Date()))
+                            .font(.caption)
+                        if entry.notification != nil {
+                            Image(systemName: "bell.fill")
+                                .imageScale(.small)
+                        }
+                    }
                 }
                 Spacer()
                 Text("\(entry.amount) fist\(entry.amount == 1 ? "" : "s")")

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		590CA2B92430374C00C94220 /* EntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 590CA2B82430374C00C94220 /* EntryCell.swift */; };
+		59516D212432867E000A3C3A /* AlertContents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59516D202432867E000A3C3A /* AlertContents.swift */; };
 		597C5378241C2D4C008D4FEA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5377241C2D4C008D4FEA /* AppDelegate.swift */; };
 		597C537A241C2D4C008D4FEA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5379241C2D4C008D4FEA /* SceneDelegate.swift */; };
 		597C537D241C2D4C008D4FEA /* Food_Tracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 597C537B241C2D4C008D4FEA /* Food_Tracker.xcdatamodeld */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		590CA2B82430374C00C94220 /* EntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryCell.swift; sourceTree = "<group>"; };
+		59516D202432867E000A3C3A /* AlertContents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertContents.swift; sourceTree = "<group>"; };
 		597C5374241C2D4C008D4FEA /* Food Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Food Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		597C5377241C2D4C008D4FEA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		597C5379241C2D4C008D4FEA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				597C538E241C3363008D4FEA /* EntryView.swift */,
 				597C5392241C4194008D4FEA /* FoodsView.swift */,
 				597C5394241C428D008D4FEA /* FoodView.swift */,
+				59516D202432867E000A3C3A /* AlertContents.swift */,
 				597C5380241C2D4F008D4FEA /* Assets.xcassets */,
 				597C5385241C2D4F008D4FEA /* LaunchScreen.storyboard */,
 				597C5388241C2D4F008D4FEA /* Info.plist */,
@@ -172,6 +175,7 @@
 				597C5395241C428D008D4FEA /* FoodView.swift in Sources */,
 				597C537F241C2D4C008D4FEA /* ContentView.swift in Sources */,
 				597C537D241C2D4C008D4FEA /* Food_Tracker.xcdatamodeld in Sources */,
+				59516D212432867E000A3C3A /* AlertContents.swift in Sources */,
 				597C5391241C4140008D4FEA /* EntriesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
