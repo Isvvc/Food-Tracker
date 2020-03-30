@@ -10,7 +10,7 @@ import SwiftUI
 
 struct FoodsView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(entity: Food.entity(), sortDescriptors: []) var foods: FetchedResults<Food>
+    @FetchRequest(entity: Food.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]) var foods: FetchedResults<Food>
     
     @State private var showingFood = false
         

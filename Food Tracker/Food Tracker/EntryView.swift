@@ -11,7 +11,7 @@ import SwiftUI
 struct EntryView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @FetchRequest(entity: Food.entity(), sortDescriptors: []) var foods: FetchedResults<Food>
+    @FetchRequest(entity: Food.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]) var foods: FetchedResults<Food>
     
     @State private var amount: Int = 0
     @State private var foodIndex: Int = 0
