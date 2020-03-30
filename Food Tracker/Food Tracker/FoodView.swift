@@ -14,6 +14,13 @@ struct FoodView: View {
     
     @State private var name = ""
     
+    var food: Food?
+    
+    init(food: Food? = nil) {
+        self.food = food
+        _name = .init(initialValue: self.food?.name ?? "")
+    }
+    
     var body: some View {
         Form {
             Section {
@@ -22,8 +29,14 @@ struct FoodView: View {
             
             Section {
                 Button("Save") {
-                    let newFood = Food(context: self.moc)
-                    newFood.name = self.name
+                    guard !self.name.isEmpty else { return }
+                    
+                    if let food = self.food {
+                        food.name = self.name
+                    } else {
+                        let newFood = Food(context: self.moc)
+                        newFood.name = self.name
+                    }
                     try? self.moc.save()
                     self.presentationMode.wrappedValue.dismiss()
                 }

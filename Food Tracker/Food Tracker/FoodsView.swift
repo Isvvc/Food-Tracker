@@ -13,9 +13,13 @@ struct FoodsView: View {
     @FetchRequest(entity: Food.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]) var foods: FetchedResults<Food>
     
     @State private var showingFood = false
+    @State private var selectedFood: Food?
         
     var addFoodButton: some View {
-        Button(action: { self.showingFood.toggle() }) {
+        Button(action: {
+            self.selectedFood = nil
+            self.showingFood.toggle()
+        }) {
             Image(systemName: "plus")
                 .imageScale(.large)
         }
@@ -24,12 +28,17 @@ struct FoodsView: View {
     var body: some View {
         NavigationView {
             List(foods, id: \.self) { food in
-                Text(food.name ?? "")
+                Button(action: {
+                    self.selectedFood = food
+                    self.showingFood.toggle()
+                }) {
+                    Text(food.name ?? "")
+                }
             }
             .navigationBarTitle("Foods")
             .navigationBarItems(trailing: addFoodButton)
             .sheet(isPresented: $showingFood) {
-                FoodView()
+                FoodView(food: self.selectedFood)
                     .environment(\.managedObjectContext, self.moc)
             }
         }.tabItem {
