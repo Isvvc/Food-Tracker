@@ -23,12 +23,6 @@ struct EntriesView: View {
     
     let entryController = EntryController()
     
-    let dateFormatter: DateFormatter = {
-        let value = DateFormatter()
-        value.dateFormat = "EEEE, MMM d"
-        return value
-    }()
-    
     var addEntryButton: some View {
         Button(action: {
             if self.foods.first == nil {
@@ -39,7 +33,6 @@ struct EntriesView: View {
         }) {
             Image(systemName: "plus")
                 .imageScale(.large)
-//                .padding(2)
         }
     }
     
@@ -84,22 +77,6 @@ struct EntriesView: View {
         return results
     }
     
-    func planned(_ entries: [Entry]) -> Int16 {
-        entries.map({ $0.amount }).reduce(0, +)
-    }
-    
-    func eaten(_ entries: [Entry]) -> Int16 {
-        entries.filter({ $0.complete }).map({ $0.amount }).reduce(0, +)
-    }
-    
-    func progress(_ entries: [Entry]) -> CGFloat {
-        if planned(entries) == 0 {
-            return 0
-        }
-        
-        return CGFloat(eaten(entries)) / CGFloat(planned(entries))
-    }
-    
     var body: some View {
         NavigationView {
             List {
@@ -115,33 +92,7 @@ struct EntriesView: View {
                 
                 ForEach(filteredEntries, id: \.self) { day in
                     Group {
-                        Section(header: Text(self.dateFormatter.string(from: day.first?.timestamp ?? Date()))) {
-                            HStack {
-                                Text("Fists planned:")
-                                Spacer()
-                                Text("\(self.planned(day))")
-                            }
-                            VStack {
-                                HStack {
-                                    Text("Eaten so far:")
-                                    Spacer()
-                                    Text("\(self.eaten(day))")
-                                }
-                                ZStack(alignment: .leading) {
-                                    GeometryReader { geometryReader in
-                                        Capsule()
-                                            .foregroundColor(Color(UIColor(red: 245/255,
-                                                                           green: 245/255,
-                                                                           blue: 245/255,
-                                                                           alpha: 1.0)))
-                                        Capsule()
-                                            .frame(width: geometryReader.size.width * self.progress(day))
-                                            .foregroundColor(.green)
-                                            .animation(.easeInOut)
-                                    }
-                                }
-                            }
-                        }
+                        DaySection(day: day)
                         
                         Section {
                             ForEach(day, id: \.self) { entry in
@@ -152,7 +103,6 @@ struct EntriesView: View {
                 }
                 .onDelete { indexSet in
                     let entry = self.entries[indexSet.first!]
-                    
                     self.entryController.deleteEntry(entry: entry, context: self.moc)
                 }
             }
