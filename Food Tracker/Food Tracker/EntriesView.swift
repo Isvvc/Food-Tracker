@@ -26,10 +26,10 @@ struct EntriesView: View {
     
     var addEntryButton: some View {
         Button(action: { self.showingEntry.toggle() }) {
-                        Image(systemName: "plus")
-                            .imageScale(.large)
-//                            .padding(2)
-                    }
+            Image(systemName: "plus")
+                .imageScale(.large)
+//                .padding(2)
+        }
     }
     
     var datesToShow: [Date] {
@@ -70,16 +70,16 @@ struct EntriesView: View {
         return results
     }
     
-    var planned: Int16 {
-        filteredEntries[0].map({ $0.amount }).reduce(0, +)
+    func planned(_ entries: [Entry]) -> Int16 {
+        entries.map({ $0.amount }).reduce(0, +)
     }
     
-    var eaten: Int16 {
-        filteredEntries[0].filter({ $0.complete }).map({ $0.amount }).reduce(0, +)
+    func eaten(_ entries: [Entry]) -> Int16 {
+        entries.filter({ $0.complete }).map({ $0.amount }).reduce(0, +)
     }
     
-    var progress: CGFloat {
-        CGFloat(eaten) / CGFloat(planned)
+    func progress(_ entries: [Entry]) -> CGFloat {
+        CGFloat(eaten(entries)) / CGFloat(planned(entries))
     }
     
     var body: some View {
@@ -90,37 +90,42 @@ struct EntriesView: View {
                 }
                 
                 if filteredEntries.count > 0 {
-                    HStack {
-                        Text("Fists planned:")
-                        Spacer()
-                        Text("\(planned)")
-                    }
-                    VStack {
-                        HStack {
-                            Text("Eaten so far:")
-                            Spacer()
-                            Text("\(eaten)")
-                        }
-                        ZStack(alignment: .leading) {
-                            GeometryReader { geometryReader in
-                                Capsule()
-                                    .foregroundColor(Color(UIColor(red: 245/255,
-                                                                   green: 245/255,
-                                                                   blue: 245/255,
-                                                                   alpha: 1.0)))
-                                Capsule()
-                                    .frame(width: geometryReader.size.width * self.progress)
-                                    .foregroundColor(.green)
-                                    .animation(.easeInOut)
-                            }
-                        }
-                    }
                 }
                 
                 ForEach(filteredEntries, id: \.self) { day in
-                    Section(header: Text(self.dateFormatter.string(from: day.first?.timestamp ?? Date()))) {
-                        ForEach(day, id: \.self) { entry in
-                            EntryCell(entry: entry)
+                    Group {
+                        Section(header: Text(self.dateFormatter.string(from: day.first?.timestamp ?? Date()))) {
+                            HStack {
+                                Text("Fists planned:")
+                                Spacer()
+                                Text("\(self.planned(day))")
+                            }
+                            VStack {
+                                HStack {
+                                    Text("Eaten so far:")
+                                    Spacer()
+                                    Text("\(self.eaten(day))")
+                                }
+                                ZStack(alignment: .leading) {
+                                    GeometryReader { geometryReader in
+                                        Capsule()
+                                            .foregroundColor(Color(UIColor(red: 245/255,
+                                                                           green: 245/255,
+                                                                           blue: 245/255,
+                                                                           alpha: 1.0)))
+                                        Capsule()
+                                            .frame(width: geometryReader.size.width * self.progress(day))
+                                            .foregroundColor(.green)
+                                            .animation(.easeInOut)
+                                    }
+                                }
+                            }
+                        }
+                        
+                        Section {
+                            ForEach(day, id: \.self) { entry in
+                                EntryCell(entry: entry)
+                            }
                         }
                     }
                 }
