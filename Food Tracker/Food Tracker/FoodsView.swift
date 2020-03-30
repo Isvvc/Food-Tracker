@@ -27,12 +27,20 @@ struct FoodsView: View {
     
     var body: some View {
         NavigationView {
-            List(foods, id: \.self) { food in
-                Button(action: {
-                    self.selectedFood = food
-                    self.showingFood.toggle()
-                }) {
-                    Text(food.name ?? "")
+            List {
+                ForEach(foods, id: \.self) { food in
+                    Button(action: {
+                        self.selectedFood = food
+                        self.showingFood.toggle()
+                    }) {
+                        Text(food.name ?? "")
+                    }
+                }
+                .onDelete { indexSet in
+                    let food = self.foods[indexSet.first!]
+                    
+                    self.moc.delete(food)
+                    try? self.moc.save()
                 }
             }
             .navigationBarTitle("Foods")
