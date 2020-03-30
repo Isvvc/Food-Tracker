@@ -13,7 +13,7 @@ struct EntryView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @FetchRequest(entity: Food.entity(), sortDescriptors: [NSSortDescriptor(key: "name", ascending: true)]) var foods: FetchedResults<Food>
     
-    @State private var amount: Int = 0
+    @State private var amount: Int = 1
     @State private var foodIndex: Int = 0
     @State private var date: Date = Date()
     @State private var notification: Bool = false
