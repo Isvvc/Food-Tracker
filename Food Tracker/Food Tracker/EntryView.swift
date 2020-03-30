@@ -32,7 +32,7 @@ struct EntryView: View {
                     }
 
                     Picker("Amount", selection: $amount) {
-                        ForEach(1..<6) {
+                        ForEach(0..<6) {
                             Text("\($0) fist\($0 == 1 ? "" : "s")")
                         }
                     }
@@ -49,7 +49,7 @@ struct EntryView: View {
                     Button("Save") {
                         self.entryController.createEntry(
                             food: self.foods[self.foodIndex],
-                            amount: Int16(self.amount + 1),
+                            amount: Int16(self.amount),
                             timestamp: self.date,
                             notification: self.notification,
                             context: self.moc) { alertContents in

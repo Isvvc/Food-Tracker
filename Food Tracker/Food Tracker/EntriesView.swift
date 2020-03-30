@@ -93,7 +93,11 @@ struct EntriesView: View {
     }
     
     func progress(_ entries: [Entry]) -> CGFloat {
-        CGFloat(eaten(entries)) / CGFloat(planned(entries))
+        if planned(entries) == 0 {
+            return 0
+        }
+        
+        return CGFloat(eaten(entries)) / CGFloat(planned(entries))
     }
     
     var body: some View {
