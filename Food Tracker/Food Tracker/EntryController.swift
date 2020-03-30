@@ -16,8 +16,7 @@ class EntryController {
                 if let alertBody = alertBody {
                     completion(AlertContents(title: "Could not set notification", body: alertBody))
                 } else {
-                    let newEntry = self.createEntry(food: food, amount: amount, timestamp: timestamp, context: context)
-                    newEntry.notification = uuid
+                    self.createEntry(food: food, amount: amount, timestamp: timestamp, notificationID: uuid, context: context)
                     completion(nil)
                 }
             }
@@ -28,11 +27,12 @@ class EntryController {
     }
     
     @discardableResult
-    private func createEntry(food: Food, amount: Int16, timestamp: Date, context: NSManagedObjectContext) -> Entry {
+    private func createEntry(food: Food, amount: Int16, timestamp: Date, notificationID: UUID? = nil, context: NSManagedObjectContext) -> Entry {
         let newEntry = Entry(context: context)
         newEntry.food = food
         newEntry.amount = amount
         newEntry.timestamp = timestamp
+        newEntry.notification = notificationID
         
         try? context.save()
         return newEntry
