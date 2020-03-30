@@ -44,7 +44,7 @@ struct FoodView: View {
                 }
             }
             .navigationBarTitle("Food item")
-            .navigationBarItems(trailing: Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+            .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                 Text("Cancel")
             })
         }

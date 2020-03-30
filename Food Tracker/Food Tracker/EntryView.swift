@@ -64,7 +64,7 @@ struct EntryView: View {
                 }
             }
             .navigationBarTitle("New entry")
-            .navigationBarItems(trailing: Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
+            .navigationBarItems(leading: Button(action: { self.presentationMode.wrappedValue.dismiss() }) {
                 Text("Cancel")
             })
             .alert(item: $alertContents) { alertContents in
