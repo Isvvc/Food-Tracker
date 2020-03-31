@@ -13,6 +13,7 @@ struct ContentView: View {
         TabView {
             EntriesView()
             FoodsView()
+            SettingsView()
         }
     }
 }
