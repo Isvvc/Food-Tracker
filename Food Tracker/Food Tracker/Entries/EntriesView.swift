@@ -103,7 +103,7 @@ struct EntriesView: View {
                 }
                 .onDelete { indexSet in
                     let entry = self.entries[indexSet.first!]
-                    self.entryController.deleteEntry(entry: entry, context: self.moc)
+                    self.entryController.deleteEntry(entry, context: self.moc)
                 }
             }
             .listStyle(GroupedListStyle())

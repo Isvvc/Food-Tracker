@@ -15,6 +15,8 @@ struct GoalsView: View {
     @State private var showingGoal = false
     @State private var selectedGoal: Goal?
     
+    let goalController = GoalController()
+    
     let dateFormatter: DateFormatter = {
         let value = DateFormatter()
         value.dateFormat = "EEEE, MMM d"
@@ -37,15 +39,21 @@ struct GoalsView: View {
                     HStack {
                         Text("Starting \(self.dateFormatter.string(from: goal.startDate ?? Date()))")
                         Spacer()
-                        Text("eat \(goal.amount)")
+                        Text("\(goal.amount) fists per day")
                     }
                 }
+                .foregroundColor(Color(.label))
+                
+            }
+            .onDelete { indexSet in
+                let goal = self.goals[indexSet.first!]
+                self.goalController.deleteGoal(goal, context: self.moc)
             }
         }
         .navigationBarTitle("Goals")
         .navigationBarItems(trailing: addGoalButtion)
         .sheet(isPresented: $showingGoal) {
-            GoalView()
+            GoalView(goalController: self.goalController)
                 .environment(\.managedObjectContext, self.moc)
         }
     }

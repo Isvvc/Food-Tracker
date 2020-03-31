@@ -15,6 +15,7 @@ struct GoalView: View {
     @State private var date = Date()
     @State private var amount: Int16 = 18
     
+    var goalController: GoalController
     var goal: Goal?
     
     var body: some View {
@@ -33,7 +34,8 @@ struct GoalView: View {
                 
                 Section {
                     Button("Save") {
-                        //<#code#>
+                        self.goalController.createGoal(startDate: self.date, amount: self.amount, context: self.moc)
+                        self.presentationMode.wrappedValue.dismiss()
                     }
                 }
             }
@@ -47,6 +49,6 @@ struct GoalView: View {
 
 struct GoalView_Previews: PreviewProvider {
     static var previews: some View {
-        GoalView()
+        GoalView(goalController: GoalController())
     }
 }
