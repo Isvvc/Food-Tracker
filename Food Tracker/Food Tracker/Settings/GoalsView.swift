@@ -10,18 +10,12 @@ import SwiftUI
 
 struct GoalsView: View {
     @Environment(\.managedObjectContext) var moc
-    @FetchRequest(entity: Goal.entity(), sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: true)]) var goals: FetchedResults<Goal>
+    @FetchRequest(entity: Goal.entity(), sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: false)]) var goals: FetchedResults<Goal>
     
     @State private var showingGoal = false
     @State private var selectedGoal: Goal?
     
     let goalController = GoalController()
-    
-    let dateFormatter: DateFormatter = {
-        let value = DateFormatter()
-        value.dateFormat = "EEEE, MMM d"
-        return value
-    }()
     
     var addGoalButtion: some View {
         Button("Set new goal") {
@@ -32,23 +26,29 @@ struct GoalsView: View {
     
     var body: some View {
         List {
-            ForEach(goals, id: \.self) { goal in
-                Button(action: {
-                    self.selectedGoal = goal
-                    self.showingGoal = true
-                }) {
-                    HStack {
-                        Text("Starting \(self.dateFormatter.string(from: goal.startDate ?? Date()))")
-                        Spacer()
-                        Text("\(goal.amount) fists per day")
+            if goals.count > 0 {
+                Section(header: Text("Current Goal".uppercased())) {
+                    // This ForEach is so that there can be an onDelete action on the one cell
+                    ForEach([goals.first!], id: \.self) { goal in
+                        GoalCell(showingGoal: self.$showingGoal, selectedGoal: self.$selectedGoal, goal: goal)
+                    }
+                    .onDelete { indexSet in
+                        guard let goal = self.goals.first else { return }
+                        self.goalController.deleteGoal(goal, context: self.moc)
                     }
                 }
-                .foregroundColor(Color(.label))
-                
             }
-            .onDelete { indexSet in
-                let goal = self.goals[indexSet.first!]
-                self.goalController.deleteGoal(goal, context: self.moc)
+            
+            if goals.count > 1 {
+                Section(header: Text("Previous Goals".uppercased())) {
+                    ForEach(goals.dropFirst(), id: \.self) { goal in
+                        GoalCell(showingGoal: self.$showingGoal, selectedGoal: self.$selectedGoal, goal: goal)
+                    }
+                    .onDelete { indexSet in
+                        let goal = self.goals[indexSet.first! + 1]
+                        self.goalController.deleteGoal(goal, context: self.moc)
+                    }
+                }
             }
         }
         .navigationBarTitle("Goals")
@@ -57,6 +57,33 @@ struct GoalsView: View {
             GoalView(goalController: self.goalController, goal: self.selectedGoal)
                 .environment(\.managedObjectContext, self.moc)
         }
+    }
+}
+
+struct GoalCell: View {
+    @Binding var showingGoal: Bool
+    @Binding var selectedGoal: Goal?
+    
+    var goal: Goal
+    
+    let dateFormatter: DateFormatter = {
+        let value = DateFormatter()
+        value.dateFormat = "EEEE, MMM d"
+        return value
+    }()
+    
+    var body: some View {
+        Button(action: {
+            self.selectedGoal = self.goal
+            self.showingGoal = true
+        }) {
+            HStack {
+                Text("Starting \(self.dateFormatter.string(from: goal.startDate ?? Date()))")
+                Spacer()
+                Text("\(goal.amount) fists per day")
+            }
+        }
+        .foregroundColor(Color(.label))
     }
 }
 
