@@ -22,6 +22,7 @@
 		597C5391241C4140008D4FEA /* EntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5390241C4140008D4FEA /* EntriesView.swift */; };
 		597C5393241C4194008D4FEA /* FoodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5392241C4194008D4FEA /* FoodsView.swift */; };
 		597C5395241C428D008D4FEA /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5394241C428D008D4FEA /* FoodView.swift */; };
+		59D8E54A2432F82F007E66DF /* GoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D8E5492432F82F007E66DF /* GoalView.swift */; };
 		59DC5F152432F22C006EEF36 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DC5F142432F22C006EEF36 /* SettingsView.swift */; };
 		59DC5F172432F273006EEF36 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DC5F162432F273006EEF36 /* GoalsView.swift */; };
 /* End PBXBuildFile section */
@@ -44,6 +45,7 @@
 		597C5390241C4140008D4FEA /* EntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesView.swift; sourceTree = "<group>"; };
 		597C5392241C4194008D4FEA /* FoodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodsView.swift; sourceTree = "<group>"; };
 		597C5394241C428D008D4FEA /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
+		59D8E5492432F82F007E66DF /* GoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalView.swift; sourceTree = "<group>"; };
 		59DC5F142432F22C006EEF36 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		59DC5F162432F273006EEF36 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -108,6 +110,7 @@
 			children = (
 				59DC5F142432F22C006EEF36 /* SettingsView.swift */,
 				59DC5F162432F273006EEF36 /* GoalsView.swift */,
+				59D8E5492432F82F007E66DF /* GoalView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 				597C538F241C3363008D4FEA /* EntryView.swift in Sources */,
 				597C5393241C4194008D4FEA /* FoodsView.swift in Sources */,
 				590CA2B92430374C00C94220 /* EntryCell.swift in Sources */,
+				59D8E54A2432F82F007E66DF /* GoalView.swift in Sources */,
 				59516D2524329985000A3C3A /* DaySection.swift in Sources */,
 				597C5395241C428D008D4FEA /* FoodView.swift in Sources */,
 				597C537F241C2D4C008D4FEA /* ContentView.swift in Sources */,
