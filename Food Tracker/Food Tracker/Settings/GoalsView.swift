@@ -25,6 +25,7 @@ struct GoalsView: View {
     
     var addGoalButtion: some View {
         Button("Set new goal") {
+            self.selectedGoal = nil
             self.showingGoal = true
         }
     }
@@ -53,7 +54,7 @@ struct GoalsView: View {
         .navigationBarTitle("Goals")
         .navigationBarItems(trailing: addGoalButtion)
         .sheet(isPresented: $showingGoal) {
-            GoalView(goalController: self.goalController)
+            GoalView(goalController: self.goalController, goal: self.selectedGoal)
                 .environment(\.managedObjectContext, self.moc)
         }
     }

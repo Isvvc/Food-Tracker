@@ -18,6 +18,17 @@ struct GoalView: View {
     var goalController: GoalController
     var goal: Goal?
     
+    init(goalController: GoalController, goal: Goal? = nil) {
+        self.goalController = goalController
+        self.goal = goal
+        
+        if let startDate = goal?.startDate,
+            let amount = goal?.amount {
+            _date = .init(initialValue: startDate)
+            _amount = .init(initialValue: amount)
+        }
+    }
+    
     var body: some View {
         NavigationView {
             Form {
@@ -34,7 +45,12 @@ struct GoalView: View {
                 
                 Section {
                     Button("Save") {
-                        self.goalController.createGoal(startDate: self.date, amount: self.amount, context: self.moc)
+                        if let goal = self.goal {
+                            self.goalController.updateGoal(goal, startDate: self.date, amount: self.amount, context: self.moc)
+                        } else {
+                            self.goalController.createGoal(startDate: self.date, amount: self.amount, context: self.moc)
+                        }
+                        
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }
