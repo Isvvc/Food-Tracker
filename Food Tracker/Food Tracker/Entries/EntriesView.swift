@@ -18,8 +18,8 @@ struct EntriesView: View {
     @FetchRequest(entity: Goal.entity(), sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: false)]) var goals: FetchedResults<Goal>
     
     @State private var showingEntry = false
-    @State private var showHistory = false
-    @State private var showWeekOnly = true
+    @State private var showHistory = Defaults<Bool>(key: .showHistory, defaultValue: false)
+    @State private var showWeekOnly = Defaults<Bool>(key: .showWeekOnly, defaultValue: true)
     @State private var showNoFoodAlert = false
     
     let entryController = EntryController()
@@ -56,8 +56,8 @@ struct EntriesView: View {
                     results[index].append(entry)
                 } else {
                     // Check if the date is out of the filtered range
-                    if showHistory {
-                        if showWeekOnly {
+                    if showHistory.value {
+                        if showWeekOnly.value {
                             guard let weekAgo = Calendar.current.date(byAdding: .day, value: -6, to: Date()) else { break }
                             let weekAgoDay = Calendar.current.startOfDay(for: weekAgo)
                             if entryDay < weekAgoDay {
@@ -81,12 +81,12 @@ struct EntriesView: View {
     var body: some View {
         NavigationView {
             List {
-                Toggle(isOn: $showHistory) {
+                Toggle(isOn: $showHistory.value) {
                     Text("Show history")
                 }
                 
-                if showHistory {
-                    Toggle(isOn: $showWeekOnly) {
+                if showHistory.value {
+                    Toggle(isOn: $showWeekOnly.value) {
                         Text("Show past week only")
                     }
                 }

@@ -26,6 +26,7 @@
 		59D8E54D2432FB38007E66DF /* GoalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D8E54C2432FB38007E66DF /* GoalController.swift */; };
 		59DC5F152432F22C006EEF36 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DC5F142432F22C006EEF36 /* SettingsView.swift */; };
 		59DC5F172432F273006EEF36 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DC5F162432F273006EEF36 /* GoalsView.swift */; };
+		59DCFBCB243521B200351521 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DCFBCA243521B200351521 /* Defaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		59D8E54C2432FB38007E66DF /* GoalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalController.swift; sourceTree = "<group>"; };
 		59DC5F142432F22C006EEF36 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		59DC5F162432F273006EEF36 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
+		59DCFBCA243521B200351521 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				59516D202432867E000A3C3A /* AlertContents.swift */,
+				59DCFBCA243521B200351521 /* Defaults.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -236,6 +239,7 @@
 				59D8E54A2432F82F007E66DF /* GoalView.swift in Sources */,
 				59516D2524329985000A3C3A /* DaySection.swift in Sources */,
 				597C5395241C428D008D4FEA /* FoodView.swift in Sources */,
+				59DCFBCB243521B200351521 /* Defaults.swift in Sources */,
 				597C537F241C2D4C008D4FEA /* ContentView.swift in Sources */,
 				597C537D241C2D4C008D4FEA /* Food_Tracker.xcdatamodeld in Sources */,
 				59DC5F172432F273006EEF36 /* GoalsView.swift in Sources */,
