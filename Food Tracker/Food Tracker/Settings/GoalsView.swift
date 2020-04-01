@@ -24,28 +24,62 @@ struct GoalsView: View {
         }
     }
     
+    var currentGoal: [Goal] {
+        // This returns an array so that it can be rendered using a ForEach to be considered a dynamic cell
+        if let firstGoal = goals.first(where: { $0.startDate ?? Date() < Date() }) {
+            return [firstGoal]
+        }
+        
+        return []
+    }
+    
+    var futureGoals: [Goal] {
+        let currentGoal = self.currentGoal.first
+        return goals.filter { $0 != currentGoal && $0.startDate ?? Date() > Date() }
+    }
+    
+    var previousGoals: [Goal] {
+        let currentGoal = self.currentGoal.first
+        return goals.filter { $0 != currentGoal && $0.startDate ?? Date() < Date() }
+    }
+    
     var body: some View {
         List {
-            if goals.count > 0 {
+            // Yes, there is a bit of repitition here with these three sections,
+            // but I personally think it'd end up overcomplicating things to abstract it out,
+            // and it shouldn't ever need to go beyond these three sections
+            if currentGoal.count > 0 {
                 Section(header: Text("Current Goal".uppercased())) {
                     // This ForEach is so that there can be an onDelete action on the one cell
-                    ForEach([goals.first!], id: \.self) { goal in
+                    ForEach(currentGoal, id: \.self) { goal in
                         GoalCell(showingGoal: self.$showingGoal, selectedGoal: self.$selectedGoal, goal: goal)
                     }
                     .onDelete { indexSet in
-                        guard let goal = self.goals.first else { return }
+                        let goal = self.currentGoal[indexSet.first!]
                         self.goalController.deleteGoal(goal, context: self.moc)
                     }
                 }
             }
             
-            if goals.count > 1 {
-                Section(header: Text("Previous Goals".uppercased())) {
-                    ForEach(goals.dropFirst(), id: \.self) { goal in
+            if futureGoals.count > 0 {
+                Section(header: Text("Future Goals".uppercased())) {
+                    ForEach(futureGoals, id: \.self) { goal in
                         GoalCell(showingGoal: self.$showingGoal, selectedGoal: self.$selectedGoal, goal: goal)
                     }
                     .onDelete { indexSet in
-                        let goal = self.goals[indexSet.first! + 1]
+                        let goal = self.futureGoals[indexSet.first!]
+                        self.goalController.deleteGoal(goal, context: self.moc)
+                    }
+                }
+            }
+            
+            if previousGoals.count > 0 {
+                Section(header: Text("Previous Goals".uppercased())) {
+                    ForEach(previousGoals, id: \.self) { goal in
+                        GoalCell(showingGoal: self.$showingGoal, selectedGoal: self.$selectedGoal, goal: goal)
+                    }
+                    .onDelete { indexSet in
+                        let goal = self.previousGoals[indexSet.first!]
                         self.goalController.deleteGoal(goal, context: self.moc)
                     }
                 }
