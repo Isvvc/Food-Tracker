@@ -48,7 +48,7 @@ class EntryController {
         try? context.save()
     }
     
-    func deleteEntry(entry: Entry, context: NSManagedObjectContext) {
+    func deleteEntry(_ entry: Entry, context: NSManagedObjectContext) {
         removeNotifications(for: entry)
         context.delete(entry)
         try? context.save()

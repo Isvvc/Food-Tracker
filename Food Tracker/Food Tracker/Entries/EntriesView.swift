@@ -15,6 +15,7 @@ struct EntriesView: View {
         sortDescriptors: [NSSortDescriptor(key: "timestamp", ascending: false)]
     ) var entries: FetchedResults<Entry>
     @FetchRequest(entity: Food.entity(), sortDescriptors: []) var foods: FetchedResults<Food>
+    @FetchRequest(entity: Goal.entity(), sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: false)]) var goals: FetchedResults<Goal>
     
     @State private var showingEntry = false
     @State private var showHistory = false
@@ -92,7 +93,7 @@ struct EntriesView: View {
                 
                 ForEach(filteredEntries, id: \.self) { day in
                     Group {
-                        DaySection(day: day)
+                        DaySection(day: day, goals: self.goals.map { $0 })
                         
                         Section {
                             ForEach(day, id: \.self) { entry in
@@ -103,7 +104,7 @@ struct EntriesView: View {
                 }
                 .onDelete { indexSet in
                     let entry = self.entries[indexSet.first!]
-                    self.entryController.deleteEntry(entry: entry, context: self.moc)
+                    self.entryController.deleteEntry(entry, context: self.moc)
                 }
             }
             .listStyle(GroupedListStyle())

@@ -11,6 +11,21 @@ import SwiftUI
 struct DaySection: View {
     
     let day: [Entry]
+    let goal: Goal?
+    
+    init(day: [Entry], goals: [Goal]) {
+        self.day = day
+        
+        guard let date = day.first?.timestamp else {
+            self.goal = nil
+            return
+        }
+        
+        self.goal = goals.first(where: { goal -> Bool in
+            guard let startDate = goal.startDate else { return false }
+            return startDate < date
+        })
+    }
     
     let dateFormatter: DateFormatter = {
         let value = DateFormatter()
@@ -18,34 +33,57 @@ struct DaySection: View {
         return value
     }()
     
-    func planned(_ entries: [Entry]) -> Int16 {
-        entries.map({ $0.amount }).reduce(0, +)
+    var planned: Int16 {
+        day.map({ $0.amount }).reduce(0, +)
     }
     
-    func eaten(_ entries: [Entry]) -> Int16 {
-        entries.filter({ $0.complete }).map({ $0.amount }).reduce(0, +)
+    var eaten: Int16 {
+        day.filter({ $0.complete }).map({ $0.amount }).reduce(0, +)
     }
     
-    func progress(_ entries: [Entry]) -> CGFloat {
-        if planned(entries) == 0 {
+    var goalAmount: Int16 {
+        if let goal = goal {
+            return goal.amount
+        } else {
+            return planned
+        }
+    }
+    
+    var progress: CGFloat {
+        let denominator = goalAmount
+        
+        if denominator == 0 {
             return 0
         }
         
-        return CGFloat(eaten(entries)) / CGFloat(planned(entries))
+        if eaten >= denominator {
+            return 1
+        }
+        
+        return CGFloat(eaten) / CGFloat(denominator)
     }
     
     var body: some View {
         Section(header: Text(self.dateFormatter.string(from: day.first?.timestamp ?? Date()))) {
-            HStack {
-                Text("Fists planned:")
-                Spacer()
-                Text("\(self.planned(day))")
+            if goal != nil {
+                HStack {
+                    Text("Goal:")
+                    Spacer()
+                    Text("\(self.goal!.amount) fists")
+                }
             }
+            
+            HStack {
+                Text("Meals planned:")
+                Spacer()
+                Text("\(self.planned)")
+            }
+            
             VStack {
                 HStack {
                     Text("Eaten so far:")
                     Spacer()
-                    Text("\(self.eaten(day))")
+                    Text("\(self.eaten)/\(self.goalAmount)")
                 }
                 ZStack(alignment: .leading) {
                     GeometryReader { geometryReader in
@@ -55,7 +93,7 @@ struct DaySection: View {
                                                            blue: 245/255,
                                                            alpha: 1.0)))
                         Capsule()
-                            .frame(width: geometryReader.size.width * self.progress(self.day))
+                            .frame(width: geometryReader.size.width * self.progress)
                             .foregroundColor(.green)
                             .animation(.easeInOut)
                     }

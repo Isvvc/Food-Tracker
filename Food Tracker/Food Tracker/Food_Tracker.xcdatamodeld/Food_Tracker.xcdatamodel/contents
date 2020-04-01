@@ -15,6 +15,10 @@
         <relationship name="entries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Entry" inverseName="food" inverseEntity="Entry"/>
         <relationship name="meals" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Meal" inverseName="foods" inverseEntity="Meal"/>
     </entity>
+    <entity name="Goal" representedClassName="Goal" syncable="YES" codeGenerationType="class">
+        <attribute name="amount" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="Meal" representedClassName="Meal" syncable="YES" codeGenerationType="class">
         <attribute name="beginTime" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
@@ -27,5 +31,6 @@
         <element name="Entry" positionX="-54" positionY="18" width="128" height="133"/>
         <element name="Food" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="Meal" positionX="-45" positionY="45" width="128" height="133"/>
+        <element name="Goal" positionX="-63" positionY="63" width="128" height="73"/>
     </elements>
 </model>

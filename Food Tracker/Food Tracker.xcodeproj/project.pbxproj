@@ -22,6 +22,10 @@
 		597C5391241C4140008D4FEA /* EntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5390241C4140008D4FEA /* EntriesView.swift */; };
 		597C5393241C4194008D4FEA /* FoodsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5392241C4194008D4FEA /* FoodsView.swift */; };
 		597C5395241C428D008D4FEA /* FoodView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597C5394241C428D008D4FEA /* FoodView.swift */; };
+		59D8E54A2432F82F007E66DF /* GoalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D8E5492432F82F007E66DF /* GoalView.swift */; };
+		59D8E54D2432FB38007E66DF /* GoalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59D8E54C2432FB38007E66DF /* GoalController.swift */; };
+		59DC5F152432F22C006EEF36 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DC5F142432F22C006EEF36 /* SettingsView.swift */; };
+		59DC5F172432F273006EEF36 /* GoalsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DC5F162432F273006EEF36 /* GoalsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +46,10 @@
 		597C5390241C4140008D4FEA /* EntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesView.swift; sourceTree = "<group>"; };
 		597C5392241C4194008D4FEA /* FoodsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodsView.swift; sourceTree = "<group>"; };
 		597C5394241C428D008D4FEA /* FoodView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodView.swift; sourceTree = "<group>"; };
+		59D8E5492432F82F007E66DF /* GoalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalView.swift; sourceTree = "<group>"; };
+		59D8E54C2432FB38007E66DF /* GoalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalController.swift; sourceTree = "<group>"; };
+		59DC5F142432F22C006EEF36 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		59DC5F162432F273006EEF36 /* GoalsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,14 +85,11 @@
 				597C5377241C2D4C008D4FEA /* AppDelegate.swift */,
 				597C5379241C2D4C008D4FEA /* SceneDelegate.swift */,
 				597C537E241C2D4C008D4FEA /* ContentView.swift */,
-				597C5390241C4140008D4FEA /* EntriesView.swift */,
-				59516D2424329985000A3C3A /* DaySection.swift */,
-				590CA2B82430374C00C94220 /* EntryCell.swift */,
-				597C538E241C3363008D4FEA /* EntryView.swift */,
-				597C5392241C4194008D4FEA /* FoodsView.swift */,
-				597C5394241C428D008D4FEA /* FoodView.swift */,
-				59516D22243289EA000A3C3A /* EntryController.swift */,
-				59516D202432867E000A3C3A /* AlertContents.swift */,
+				59E9EE6D2432F12D00CB238D /* Entries */,
+				59E9EE6E2432F15C00CB238D /* Foods */,
+				59E9EE6F2432F17800CB238D /* Helpers */,
+				59DC5F132432F21B006EEF36 /* Settings */,
+				59D8E54B2432FB22007E66DF /* Model Controllers */,
 				597C5380241C2D4F008D4FEA /* Assets.xcassets */,
 				597C5385241C2D4F008D4FEA /* LaunchScreen.storyboard */,
 				597C5388241C2D4F008D4FEA /* Info.plist */,
@@ -100,6 +105,53 @@
 				597C5383241C2D4F008D4FEA /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		59D8E54B2432FB22007E66DF /* Model Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				59516D22243289EA000A3C3A /* EntryController.swift */,
+				59D8E54C2432FB38007E66DF /* GoalController.swift */,
+			);
+			path = "Model Controllers";
+			sourceTree = "<group>";
+		};
+		59DC5F132432F21B006EEF36 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				59DC5F142432F22C006EEF36 /* SettingsView.swift */,
+				59DC5F162432F273006EEF36 /* GoalsView.swift */,
+				59D8E5492432F82F007E66DF /* GoalView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		59E9EE6D2432F12D00CB238D /* Entries */ = {
+			isa = PBXGroup;
+			children = (
+				597C5390241C4140008D4FEA /* EntriesView.swift */,
+				59516D2424329985000A3C3A /* DaySection.swift */,
+				590CA2B82430374C00C94220 /* EntryCell.swift */,
+				597C538E241C3363008D4FEA /* EntryView.swift */,
+			);
+			path = Entries;
+			sourceTree = "<group>";
+		};
+		59E9EE6E2432F15C00CB238D /* Foods */ = {
+			isa = PBXGroup;
+			children = (
+				597C5392241C4194008D4FEA /* FoodsView.swift */,
+				597C5394241C428D008D4FEA /* FoodView.swift */,
+			);
+			path = Foods;
+			sourceTree = "<group>";
+		};
+		59E9EE6F2432F17800CB238D /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				59516D202432867E000A3C3A /* AlertContents.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,14 +227,18 @@
 			files = (
 				597C5378241C2D4C008D4FEA /* AppDelegate.swift in Sources */,
 				59516D23243289EA000A3C3A /* EntryController.swift in Sources */,
+				59DC5F152432F22C006EEF36 /* SettingsView.swift in Sources */,
 				597C537A241C2D4C008D4FEA /* SceneDelegate.swift in Sources */,
 				597C538F241C3363008D4FEA /* EntryView.swift in Sources */,
 				597C5393241C4194008D4FEA /* FoodsView.swift in Sources */,
+				59D8E54D2432FB38007E66DF /* GoalController.swift in Sources */,
 				590CA2B92430374C00C94220 /* EntryCell.swift in Sources */,
+				59D8E54A2432F82F007E66DF /* GoalView.swift in Sources */,
 				59516D2524329985000A3C3A /* DaySection.swift in Sources */,
 				597C5395241C428D008D4FEA /* FoodView.swift in Sources */,
 				597C537F241C2D4C008D4FEA /* ContentView.swift in Sources */,
 				597C537D241C2D4C008D4FEA /* Food_Tracker.xcdatamodeld in Sources */,
+				59DC5F172432F273006EEF36 /* GoalsView.swift in Sources */,
 				59516D212432867E000A3C3A /* AlertContents.swift in Sources */,
 				597C5391241C4140008D4FEA /* EntriesView.swift in Sources */,
 			);
@@ -321,6 +377,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Food Tracker/Preview Content\"";
 				DEVELOPMENT_TEAM = A4525544Q4;
 				ENABLE_PREVIEWS = YES;
@@ -341,6 +398,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Food Tracker/Preview Content\"";
 				DEVELOPMENT_TEAM = A4525544Q4;
 				ENABLE_PREVIEWS = YES;
