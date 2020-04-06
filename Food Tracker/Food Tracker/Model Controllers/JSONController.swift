@@ -8,8 +8,9 @@
 
 import CoreData
 import SwiftyJSON
+import SwiftUI
 
-class JSONController {
+class JSONController: NSObject {
     
     let dateTimeFormatter: ISO8601DateFormatter = {
         let result = ISO8601DateFormatter()
@@ -89,4 +90,18 @@ class JSONController {
         return json
     }
     
+    func importJSON(fromURL url: URL) throws {
+        let data = try Data(contentsOf: url)
+        let json = try JSON(data: data)
+        
+        print(json.rawString() ?? "No JSON")
+    }
+    
+}
+
+extension JSONController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let url = urls.first else { return }
+        try? importJSON(fromURL: url)
+    }
 }

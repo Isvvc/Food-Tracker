@@ -45,7 +45,10 @@ struct SettingsView: View {
                     })
                     
                     Button(action: {
-//                        <#code#>
+                        let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.text"], in: .import)
+                        documentPicker.delegate = self.jsonController
+                        
+                        UIApplication.shared.windows.first?.rootViewController?.present(documentPicker, animated: true)
                     }, label: {
                         Text("Import Database")
                     })
