@@ -37,6 +37,7 @@ struct FoodView: View {
                         } else {
                             let newFood = Food(context: self.moc)
                             newFood.name = self.name
+                            newFood.id = UUID()
                         }
                         try? self.moc.save()
                         self.presentationMode.wrappedValue.dismiss()
