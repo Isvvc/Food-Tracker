@@ -31,7 +31,15 @@ struct SettingsView: View {
                 
                 Section(header: Text("Backup".uppercased())) {
                     Button(action: {
-                        try? self.jsonController.export(context: self.moc)
+                        do {
+                            guard let dbURL = try self.jsonController.export(context: self.moc) else { return }
+                            
+                            let av = UIActivityViewController(activityItems: [dbURL], applicationActivities: nil)
+                            
+                            UIApplication.shared.windows.first?.rootViewController?.present(av, animated: true)
+                        } catch {
+                            NSLog("Error exporting database: \(error)")
+                        }
                     }, label: {
                         Text("Export Database")
                     })

@@ -24,7 +24,14 @@ class JSONController {
         return result
     }()
     
-    func export(context: NSManagedObjectContext) throws {
+    private var dbFileURL: URL? {
+        let fileManager = FileManager.default
+        guard let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        
+        return documents.appendingPathComponent("food-tracker-db.json")
+    }
+    
+    func export(context: NSManagedObjectContext) throws -> URL? {
         var json = JSON()
         
         json["foods"] = try export(context: context, jsonForObject: { (food: Food) -> JSON? in
@@ -61,7 +68,12 @@ class JSONController {
             return goalJSON
         })
         
-        print(json.rawString() ?? "No json returned")
+        guard let str = json.rawString(),
+            let url = dbFileURL else { return nil }
+
+        try str.write(to: url, atomically: true, encoding: .utf8)
+        
+        return url
     }
     
     private func export<T: NSManagedObject>(context: NSManagedObjectContext, jsonForObject: (T) throws -> JSON? ) throws -> JSON {
