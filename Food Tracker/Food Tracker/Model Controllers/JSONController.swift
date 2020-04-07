@@ -18,7 +18,7 @@ class JSONController: NSObject, ObservableObject {
     
     var delegate: JSONControllerDelegate?
     
-    let dateTimeFormatter: ISO8601DateFormatter = {
+    let timestampFormatter: ISO8601DateFormatter = {
         let result = ISO8601DateFormatter()
         result.formatOptions = .withInternetDateTime
         
@@ -61,7 +61,7 @@ class JSONController: NSObject, ObservableObject {
                 let foodID = entry.food?.id?.uuidString else { return nil }
 
             var entryJSON = JSON()
-            entryJSON["timestamp"].string = dateTimeFormatter.string(from: timestamp)
+            entryJSON["timestamp"].string = timestampFormatter.string(from: timestamp)
             entryJSON["food"].string = foodID
             entryJSON["amount"].int16 = entry.amount
             entryJSON["complete"].bool = entry.complete
@@ -108,7 +108,7 @@ class JSONController: NSObject, ObservableObject {
         // as a JSONController class would not generalize properly and would expect updateObject's
         // first argument to be a NSManagedObject, not a NSManagedObject subclass
         let foodImporter = JSONImporter<Food>()
-        try foodImporter.importObjects(
+        let allFoods = try foodImporter.importObjects(
             json: json["foods"],
             context: context,
             objectsMatch: { (food: Food, json: JSON) -> Bool in
@@ -125,6 +125,58 @@ class JSONController: NSObject, ObservableObject {
                 let newFood = Food(context: context)
                 newFood.id = UUID()
                 newFood.name = json["name"].string
+                
+                return newFood
+        })
+        
+        let entryImporter = JSONImporter<Entry>()
+        try entryImporter.importObjects(
+            json: json["entries"],
+            context: context,
+            objectsMatch: { (entry: Entry, json: JSON) -> Bool in
+                guard let timestamp = entry.timestamp else { return false }
+                return timestampFormatter.string(from: timestamp) == json["timestamp"].string
+        },
+            updateObject: { entry, json in
+                if let timestampString = json["timestamp"].string,
+                    let timestamp = timestampFormatter.date(from: timestampString),
+                    timestamp != entry.timestamp {
+                    entry.timestamp = timestamp
+                }
+                
+                if let foodString = json["food"].string,
+                    let foodID = UUID(uuidString: foodString),
+                    foodID != entry.food?.id,
+                    let food = allFoods.first(where: { $0.id == foodID }) {
+                    entry.food = food
+                }
+                
+                if let amount = json["amount"].int16,
+                    entry.amount != amount {
+                    entry.amount = amount
+                }
+                
+                if let complete = json["complete"].bool,
+                    entry.complete != complete {
+                    entry.complete = complete
+                }
+        },
+            createObject: { json in
+                guard let timestampString = json["timestamp"].string,
+                    let timestamp = timestampFormatter.date(from: timestampString),
+                    let foodString = json["food"].string,
+                    let foodID = UUID(uuidString: foodString),
+                    let food = allFoods.first(where: { $0.id == foodID }),
+                    let amount = json["amount"].int16,
+                    let complete = json["complete"].bool else { return nil }
+                
+                let newEntry = Entry(context: context)
+                newEntry.food = food
+                newEntry.amount = amount
+                newEntry.timestamp = timestamp
+                newEntry.complete = complete
+                
+                return newEntry
         })
         
         try context.save()
@@ -140,22 +192,26 @@ extension JSONController: UIDocumentPickerDelegate {
 }
 
 class JSONImporter<T: NSManagedObject> {
-    func importObjects(
+    @discardableResult func importObjects(
         json: JSON,
         context: NSManagedObjectContext,
         objectsMatch: (T, JSON) -> Bool,
         updateObject: (T, JSON) -> Void,
-        createObject: (JSON) -> Void) throws {
+        createObject: (JSON) -> T?) throws -> [T] {
         
         let fetchRequest = T.fetchRequest() as! NSFetchRequest<T>
-        let existingObjects = try context.fetch(fetchRequest)
+        var existingObjects = try context.fetch(fetchRequest)
         
         for jsonObject in json.arrayValue {
             if let existingObject = existingObjects.first(where: { objectsMatch($0, jsonObject) }) {
                 updateObject(existingObject, jsonObject)
             } else {
-                createObject(jsonObject)
+                if let newObject = createObject(jsonObject) {
+                    existingObjects.append(newObject)
+                }
             }
         }
+        
+        return existingObjects
     }
 }
