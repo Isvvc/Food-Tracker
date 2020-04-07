@@ -35,7 +35,7 @@ class JSONController: NSObject, ObservableObject {
         let fileManager = FileManager.default
         guard let documents = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
         
-        return documents.appendingPathComponent("food-tracker-db.json")
+        return documents.appendingPathComponent("food-tracker-db_\(dateFormatter.string(from: Date())).json")
     }
     
     func export(context: NSManagedObjectContext) throws -> URL? {
