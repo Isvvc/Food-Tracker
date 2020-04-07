@@ -179,6 +179,32 @@ class JSONController: NSObject, ObservableObject {
                 return newEntry
         })
         
+        let goalsImporter = JSONImporter<Goal>()
+        try goalsImporter.importObjects(
+            json: json["goals"],
+            context: context,
+            objectsMatch: { (goal: Goal, json: JSON) -> Bool in
+                guard let startDate = goal.startDate else { return false }
+                return json["startDate"].string == dateFormatter.string(from: startDate)
+        },
+            updateObject: { goal, json in
+                if let amount = json["amount"].int16,
+                    goal.amount != amount {
+                    goal.amount = amount
+                }
+        },
+            createObject: { json -> Goal? in
+                guard let startDateString = json["startDate"].string,
+                    let startDate = dateFormatter.date(from: startDateString),
+                    let amount = json["amount"].int16 else { return nil }
+                
+                let newGoal = Goal(context: context)
+                newGoal.startDate = startDate
+                newGoal.amount = amount
+                
+                return newGoal
+        })
+        
         try context.save()
     }
     
