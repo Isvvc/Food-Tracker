@@ -69,6 +69,7 @@ struct SettingsView: View {
             .listStyle(GroupedListStyle())
             .navigationBarTitle("Preferences")
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .tabItem {
             Image(systemName: "gear")
                 .imageScale(.large)

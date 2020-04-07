@@ -49,6 +49,7 @@ struct FoodView: View {
                 Text("Cancel")
             })
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
