@@ -47,6 +47,7 @@ struct SettingsView: View {
                     Button(action: {
                         let documentPicker = UIDocumentPickerViewController(documentTypes: ["public.text"], in: .import)
                         documentPicker.delegate = self.jsonController
+                        self.jsonController.delegate = self
                         
                         UIApplication.shared.windows.first?.rootViewController?.present(documentPicker, animated: true)
                     }, label: {
@@ -72,6 +73,16 @@ struct SettingsView: View {
             Image(systemName: "gear")
                 .imageScale(.large)
             Text("Preferences")
+        }
+    }
+}
+
+extension SettingsView: JSONControllerDelegate {
+    func documentPicker(didPickDocumentAt url: URL) {
+        do {
+            try jsonController.importJSON(fromURL: url, context: self.moc)
+        } catch {
+            NSLog("Error importing database: \(error)")
         }
     }
 }

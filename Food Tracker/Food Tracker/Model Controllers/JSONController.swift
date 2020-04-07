@@ -10,7 +10,13 @@ import CoreData
 import SwiftyJSON
 import SwiftUI
 
-class JSONController: NSObject {
+protocol JSONControllerDelegate {
+    func documentPicker(didPickDocumentAt url: URL)
+}
+
+class JSONController: NSObject, ObservableObject {
+    
+    var delegate: JSONControllerDelegate?
     
     let dateTimeFormatter: ISO8601DateFormatter = {
         let result = ISO8601DateFormatter()
@@ -36,6 +42,10 @@ class JSONController: NSObject {
         var json = JSON()
         
         json["foods"] = try export(context: context, jsonForObject: { (food: Food) -> JSON? in
+            if food.id == nil {
+                food.id = UUID()
+            }
+            
             guard let id = food.id?.uuidString,
                 let name = food.name else { return nil }
             
@@ -63,7 +73,7 @@ class JSONController: NSObject {
             guard let startDate = goal.startDate else { return nil }
             
             var goalJSON = JSON()
-            goalJSON["timestamp"].string = dateFormatter.string(from: startDate)
+            goalJSON["startDate"].string = dateFormatter.string(from: startDate)
             goalJSON["amount"].int16 = goal.amount
             
             return goalJSON
@@ -77,24 +87,47 @@ class JSONController: NSObject {
         return url
     }
     
-    private func export<T: NSManagedObject>(context: NSManagedObjectContext, jsonForObject: (T) throws -> JSON? ) throws -> JSON {
+    private func export<T: NSManagedObject>(context: NSManagedObjectContext, jsonForObject: (T) -> JSON? ) throws -> JSON {
         let fetchRequest = T.fetchRequest() as! NSFetchRequest<T>
         let objects = try context.fetch(fetchRequest)
         
         var json = JSON([])
         for object in objects {
-            guard let objectJSON = try jsonForObject(object) else { continue }
+            guard let objectJSON = jsonForObject(object) else { continue }
             json.arrayObject?.append(objectJSON)
         }
         
         return json
     }
     
-    func importJSON(fromURL url: URL) throws {
+    func importJSON(fromURL url: URL, context: NSManagedObjectContext) throws {
         let data = try Data(contentsOf: url)
         let json = try JSON(data: data)
         
-        print(json.rawString() ?? "No JSON")
+        // JSONImporter exists as a separate class as trying to use the exact same generic function
+        // as a JSONController class would not generalize properly and would expect updateObject's
+        // first argument to be a NSManagedObject, not a NSManagedObject subclass
+        let foodImporter = JSONImporter<Food>()
+        try foodImporter.importObjects(
+            json: json["foods"],
+            context: context,
+            objectsMatch: { (food: Food, json: JSON) -> Bool in
+                food.id?.uuidString == json["id"].string
+        },
+            updateObject: { food, json in
+                let newName = json["name"].string
+                if food.name != newName {
+                    // Prevent updating objects if there is nothing to change
+                    food.name = newName
+                }
+        },
+            createObject: { json in
+                let newFood = Food(context: context)
+                newFood.id = UUID()
+                newFood.name = json["name"].string
+        })
+        
+        try context.save()
     }
     
 }
@@ -102,6 +135,27 @@ class JSONController: NSObject {
 extension JSONController: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let url = urls.first else { return }
-        try? importJSON(fromURL: url)
+        delegate?.documentPicker(didPickDocumentAt: url)
+    }
+}
+
+class JSONImporter<T: NSManagedObject> {
+    func importObjects(
+        json: JSON,
+        context: NSManagedObjectContext,
+        objectsMatch: (T, JSON) -> Bool,
+        updateObject: (T, JSON) -> Void,
+        createObject: (JSON) -> Void) throws {
+        
+        let fetchRequest = T.fetchRequest() as! NSFetchRequest<T>
+        let existingObjects = try context.fetch(fetchRequest)
+        
+        for jsonObject in json.arrayValue {
+            if let existingObject = existingObjects.first(where: { objectsMatch($0, jsonObject) }) {
+                updateObject(existingObject, jsonObject)
+            } else {
+                createObject(jsonObject)
+            }
+        }
     }
 }
