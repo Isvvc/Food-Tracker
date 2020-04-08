@@ -49,7 +49,9 @@ struct FoodsView: View {
                 FoodView(food: self.selectedFood)
                     .environment(\.managedObjectContext, self.moc)
             }
-        }.tabItem {
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .tabItem {
             Image(systemName: "list.bullet")
                 .imageScale(.large)
             Text("Foods")

@@ -115,6 +115,7 @@ struct EntriesView: View {
                     .environment(\.managedObjectContext, self.moc)
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .alert(isPresented: $showNoFoodAlert) {
             Alert(title: Text("No foods to choose from"), message: Text("Try adding some foods in the foods tab"))
         }

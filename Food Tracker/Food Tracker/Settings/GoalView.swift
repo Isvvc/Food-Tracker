@@ -60,6 +60,7 @@ struct GoalView: View {
                 Text("Cancel")
             })
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

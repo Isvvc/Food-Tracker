@@ -70,7 +70,7 @@ struct EntryView: View {
             .alert(item: $alertContents) { alertContents in
                 Alert(title: Text(alertContents.title), message: Text(alertContents.body))
             }
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
