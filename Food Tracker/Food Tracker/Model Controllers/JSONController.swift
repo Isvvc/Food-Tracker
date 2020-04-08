@@ -122,8 +122,9 @@ class JSONController: NSObject, ObservableObject {
                 }
         },
             createObject: { json in
+                guard let id = UUID(uuidString: json["id"].stringValue) else { return nil }
                 let newFood = Food(context: context)
-                newFood.id = UUID()
+                newFood.id = id
                 newFood.name = json["name"].string
                 
                 return newFood
