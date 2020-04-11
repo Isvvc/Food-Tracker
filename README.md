@@ -2,6 +2,8 @@
 
 Easy food tracking for iOS
 
+[Download on the App Store](https://apps.apple.com/us/app/fistful-food-tracker/id1505414443?ls=1)
+
 ## Description
 
 Track food portions in fists instead of calories. Calorie counting takes time out of your day and can be stressful trying to get the numbers right. Using your fist as your measurement tool for food portions is much easier.
